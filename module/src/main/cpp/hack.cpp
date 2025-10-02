@@ -23,12 +23,12 @@ void hack_start(const char *game_data_dir) {
     for (int i = 0; i < 10; i++) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
-            LOGI("load zygisk_smn");
+            LOGI("load ******");
             dlopen("/data/local/tmp/libfps.so", 0);
-            LOGI("load zygisk_smn successful");
-            load = true;
-            il2cpp_api_init(handle);
-            il2cpp_dump(game_data_dir);
+            LOGI("****** successful");
+            // load = true;
+            // il2cpp_api_init(handle);
+            // il2cpp_dump(game_data_dir);
             break;
         } else {
             sleep(1);
