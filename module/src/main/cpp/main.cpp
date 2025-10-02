@@ -52,9 +52,9 @@ private:
             enable_hack = true;
             game_data_dir = new char[strlen(app_data_dir) + 1];
             strcpy(game_data_dir, app_data_dir);
-            LOGI("load zygisk_smn");
+            //LOGI("load zygisk_smn");
             // dlopen("/data/local/tmp/libfps.so", RTLD_LAZY);
-            LOGI("load zygisk_smn successful");
+            //LOGI("load zygisk_smn successful");
 
 #if defined(__i386__)
             auto path = "zygisk/armeabi-v7a.so";
