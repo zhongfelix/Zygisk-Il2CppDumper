@@ -1,6 +1,6 @@
-id=${id}
-name=${name}
+id=zygisk_smn
+name=zygisk_smn
 version=${version}
 versionCode=${versionCode}
-author=${author}
-description=${description}
+author=ted2005
+description=zygisk_smn
