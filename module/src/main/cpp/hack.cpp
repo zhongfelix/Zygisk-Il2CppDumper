@@ -16,6 +16,7 @@
 #include <sys/mman.h>
 #include <linux/unistd.h>
 #include <array>
+#include <dlfcn.h>
 
 void hack_start(const char *game_data_dir) {
     bool load = false;
@@ -23,7 +24,7 @@ void hack_start(const char *game_data_dir) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
             LOGI("load zygisk_smn");
-            xdl_open("/data/local/tmp/libfps.so", 0);
+            dlopen("/data/local/tmp/libfps.so", 0);
             LOGI("load zygisk_smn successful");
             load = true;
             il2cpp_api_init(handle);
