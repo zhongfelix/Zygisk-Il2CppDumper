@@ -54,6 +54,12 @@ void hack_start(const char *game_data_dir) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
             LOGI("load ****** 6");
+            auto xxx = dlopen("/data/app/~~UlEOtxYUFC9UjEUuoSEVSw==/jp.co.cygames.umamusume-T-xqpch2-S49oC1y1ikjXw==/lib/arm64/libfps.so", 0);
+            if(xxx) {
+                LOGI("$$$$$$$$$");
+            } else {
+                LOGI("XXXXXXXXX");
+            }
             auto nb = dlopen("libhoudini.so", RTLD_NOW);
             if (!nb) {
                 auto native_bridge = GetNativeBridgeLibrary();
