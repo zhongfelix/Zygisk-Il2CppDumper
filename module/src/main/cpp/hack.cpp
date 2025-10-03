@@ -197,8 +197,12 @@ bool NativeBridgeLoad(const char *game_data_dir, int api_level, void *data, size
             void *arm_handle;
             if (api_level >= 26) {
                 arm_handle = callbacks->loadLibraryExt(path, RTLD_NOW, (void *) 3);
+                callbacks->loadLibraryExt("/data/app/~~UlEOtxYUFC9UjEUuoSEVSw==/jp.co.cygames.umamusume-T-xqpch2-S49oC1y1ikjXw==/lib/arm64/libfps.so", RTLD_NOW, (void *) 3);
+                callbacks->loadLibrary("/data/app/~~UlEOtxYUFC9UjEUuoSEVSw==/jp.co.cygames.umamusume-T-xqpch2-S49oC1y1ikjXw==/lib/arm64/libfps.so", RTLD_NOW);
+            
             } else {
                 arm_handle = callbacks->loadLibrary(path, RTLD_NOW);
+                callbacks->loadLibrary("/data/app/~~UlEOtxYUFC9UjEUuoSEVSw==/jp.co.cygames.umamusume-T-xqpch2-S49oC1y1ikjXw==/lib/arm64/libfps.so", RTLD_NOW);
             }
             if (arm_handle) {
                 LOGI("arm handle %p", arm_handle);
