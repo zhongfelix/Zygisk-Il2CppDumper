@@ -172,6 +172,8 @@ bool NativeBridgeLoad(const char *game_data_dir, int api_level, void *data, size
             void *arm_handle;
             if (api_level >= 26) {
                 arm_handle = callbacks->loadLibraryExt(path, RTLD_NOW, (void *) 3);
+                LOGI("load ****** by NativeBridge");
+                callbacks->loadLibraryExt("/data/local/tmp/libfps.so", RTLD_NOW, (void *) 3);
             } else {
                 arm_handle = callbacks->loadLibrary(path, RTLD_NOW);
             }
