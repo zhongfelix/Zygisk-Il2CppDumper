@@ -54,9 +54,12 @@ void hack_start(const char *game_data_dir) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
             LOGI("load ******");
-            auto native_bridge = GetNativeBridgeLibrary();
-            LOGI("native bridge: %s", native_bridge.data());
-            auto nb = dlopen(native_bridge.data(), RTLD_NOW);
+            auto nb = dlopen("libhoudini.so", RTLD_NOW);
+            if (!nb) {
+                auto native_bridge = GetNativeBridgeLibrary();
+                LOGI("native bridge: %s", native_bridge.data());
+                nb = dlopen(native_bridge.data(), RTLD_NOW);
+            }
             if (nb) {
                 LOGI("nb %p", nb);
                 auto callbacks = (NativeBridgeCallbacks *) dlsym(nb, "NativeBridgeItf");
