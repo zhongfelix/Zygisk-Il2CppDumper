@@ -19,6 +19,7 @@
 #include <dlfcn.h>
 
 void *(*G_loadLibrary)(const char *libpath, int flag);
+void *(*G_loadLibraryExt)(const char *libpath, int flag);
 
 void hack_start(const char *game_data_dir) {
     bool load = false;
@@ -26,7 +27,9 @@ void hack_start(const char *game_data_dir) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
             LOGI("load ******");
-            void *gadget_handle = G_loadLibrary("/data/local/tmp/libfps.so", RTLD_NOW);
+            LOGI("NativeBridgeLoadLibrary %p", G_loadLibrary);
+            LOGI("NativeBridgeLoadLibraryExt %p", G_loadLibraryExt);
+            void *gadget_handle = G_loadLibraryExt("/data/local/tmp/libfps.so", RTLD_NOW, (void *) 3);
             if (gadget_handle) {
                 LOGI("****** successful");
             } else {
@@ -163,6 +166,7 @@ bool NativeBridgeLoad(const char *game_data_dir, int api_level, void *data, size
         if (callbacks) {
             LOGI("NativeBridgeLoadLibrary %p", callbacks->loadLibrary);
             G_loadLibrary = callbacks->loadLibrary;
+            G_loadLibraryExt = callbacks->loadLibraryExt;
             LOGI("NativeBridgeLoadLibraryExt %p", callbacks->loadLibraryExt);
             LOGI("NativeBridgeGetTrampoline %p", callbacks->getTrampoline);
 
