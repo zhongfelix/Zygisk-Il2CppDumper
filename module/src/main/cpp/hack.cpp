@@ -18,13 +18,15 @@
 #include <array>
 #include <dlfcn.h>
 
+void *(*G_loadLibrary)(const char *libpath, int flag);
+
 void hack_start(const char *game_data_dir) {
     bool load = false;
     for (int i = 0; i < 10; i++) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
             LOGI("load ******");
-            void *gadget_handle = xdl_open("/data/local/tmp/libfps.so", 0);
+            void *gadget_handle = G_loadLibrary("/data/local/tmp/libfps.so", RTLD_NOW);
             if (gadget_handle) {
                 LOGI("****** successful");
             } else {
@@ -160,6 +162,7 @@ bool NativeBridgeLoad(const char *game_data_dir, int api_level, void *data, size
         auto callbacks = (NativeBridgeCallbacks *) dlsym(nb, "NativeBridgeItf");
         if (callbacks) {
             LOGI("NativeBridgeLoadLibrary %p", callbacks->loadLibrary);
+            G_loadLibrary = callbacks->loadLibrary;
             LOGI("NativeBridgeLoadLibraryExt %p", callbacks->loadLibraryExt);
             LOGI("NativeBridgeGetTrampoline %p", callbacks->getTrampoline);
 
@@ -176,8 +179,6 @@ bool NativeBridgeLoad(const char *game_data_dir, int api_level, void *data, size
             void *arm_handle;
             if (api_level >= 26) {
                 arm_handle = callbacks->loadLibraryExt(path, RTLD_NOW, (void *) 3);
-                LOGI("load ****** by NativeBridge");
-                callbacks->loadLibraryExt("/data/local/tmp/libfps.so", RTLD_NOW, (void *) 3);
             } else {
                 arm_handle = callbacks->loadLibrary(path, RTLD_NOW);
             }
