@@ -18,22 +18,26 @@
 #include <array>
 #include <dlfcn.h>
 
-void *(*G_loadLibrary)(const char *libpath, int flag);
-void *(*G_loadLibraryExt)(const char *libpath, int flag, void *ns);
-
 void hack_start(const char *game_data_dir) {
     bool load = false;
     for (int i = 0; i < 10; i++) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
             LOGI("load ******");
-            LOGI("NativeBridgeLoadLibrary %p", G_loadLibrary);
-            LOGI("NativeBridgeLoadLibraryExt %p", G_loadLibraryExt);
-            void *gadget_handle = G_loadLibraryExt("/data/local/tmp/libfps.so", RTLD_NOW, (void *) 3);
-            if (gadget_handle) {
-                LOGI("****** successful");
-            } else {
-                LOGI("****** failed");
+            auto native_bridge = GetNativeBridgeLibrary();
+            LOGI("native bridge: %s", native_bridge.data());
+            auto nb = dlopen(native_bridge.data(), RTLD_NOW);
+            if (nb) {
+                LOGI("nb %p", nb);
+                auto callbacks = (NativeBridgeCallbacks *) dlsym(nb, "NativeBridgeItf");
+                LOGI("NativeBridgeLoadLibrary %p", callbacks->loadLibrary);
+                LOGI("NativeBridgeLoadLibraryExt %p", callbacks->loadLibraryExt);
+                void *gadget_handle = callbacks->loadLibraryExt("/data/local/tmp/libfps.so", RTLD_NOW, (void *) 3);
+                if (gadget_handle) {
+                    LOGI("****** successful");
+                } else {
+                    LOGI("****** failed");
+                }
             }
             // load = true;
             // il2cpp_api_init(handle);
