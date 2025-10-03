@@ -18,6 +18,36 @@
 #include <array>
 #include <dlfcn.h>
 
+
+static std::string GetNativeBridgeLibrary() {
+    auto value = std::array<char, PROP_VALUE_MAX>();
+    __system_property_get("ro.dalvik.vm.native.bridge", value.data());
+    return {value.data()};
+}
+
+struct NativeBridgeCallbacks {
+    uint32_t version;
+    void *initialize;
+
+    void *(*loadLibrary)(const char *libpath, int flag);
+
+    void *(*getTrampoline)(void *handle, const char *name, const char *shorty, uint32_t len);
+
+    void *isSupported;
+    void *getAppEnv;
+    void *isCompatibleWith;
+    void *getSignalHandler;
+    void *unloadLibrary;
+    void *getError;
+    void *isPathSupported;
+    void *initAnonymousNamespace;
+    void *createNamespace;
+    void *linkNamespaces;
+
+    void *(*loadLibraryExt)(const char *libpath, int flag, void *ns);
+};
+
+
 void hack_start(const char *game_data_dir) {
     bool load = false;
     for (int i = 0; i < 10; i++) {
@@ -100,33 +130,6 @@ std::string GetLibDir(JavaVM *vms) {
     return {};
 }
 
-static std::string GetNativeBridgeLibrary() {
-    auto value = std::array<char, PROP_VALUE_MAX>();
-    __system_property_get("ro.dalvik.vm.native.bridge", value.data());
-    return {value.data()};
-}
-
-struct NativeBridgeCallbacks {
-    uint32_t version;
-    void *initialize;
-
-    void *(*loadLibrary)(const char *libpath, int flag);
-
-    void *(*getTrampoline)(void *handle, const char *name, const char *shorty, uint32_t len);
-
-    void *isSupported;
-    void *getAppEnv;
-    void *isCompatibleWith;
-    void *getSignalHandler;
-    void *unloadLibrary;
-    void *getError;
-    void *isPathSupported;
-    void *initAnonymousNamespace;
-    void *createNamespace;
-    void *linkNamespaces;
-
-    void *(*loadLibraryExt)(const char *libpath, int flag, void *ns);
-};
 
 bool NativeBridgeLoad(const char *game_data_dir, int api_level, void *data, size_t length) {
     //TODO 等待houdini初始化
@@ -169,8 +172,6 @@ bool NativeBridgeLoad(const char *game_data_dir, int api_level, void *data, size
         auto callbacks = (NativeBridgeCallbacks *) dlsym(nb, "NativeBridgeItf");
         if (callbacks) {
             LOGI("NativeBridgeLoadLibrary %p", callbacks->loadLibrary);
-            G_loadLibrary = callbacks->loadLibrary;
-            G_loadLibraryExt = callbacks->loadLibraryExt;
             LOGI("NativeBridgeLoadLibraryExt %p", callbacks->loadLibraryExt);
             LOGI("NativeBridgeGetTrampoline %p", callbacks->getTrampoline);
 
