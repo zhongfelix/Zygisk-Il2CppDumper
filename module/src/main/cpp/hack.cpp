@@ -19,7 +19,7 @@
 #include <dlfcn.h>
 
 void *(*G_loadLibrary)(const char *libpath, int flag);
-void *(*G_loadLibraryExt)(const char *libpath, int flag);
+void *(*G_loadLibraryExt)(const char *libpath, int flag, void *ns);
 
 void hack_start(const char *game_data_dir) {
     bool load = false;
