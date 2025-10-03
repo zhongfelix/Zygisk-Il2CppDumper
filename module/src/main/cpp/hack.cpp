@@ -53,7 +53,7 @@ void hack_start(const char *game_data_dir) {
     for (int i = 0; i < 10; i++) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
-            LOGI("load ******");
+            LOGI("load ****** 6");
             auto nb = dlopen("libhoudini.so", RTLD_NOW);
             if (!nb) {
                 auto native_bridge = GetNativeBridgeLibrary();
