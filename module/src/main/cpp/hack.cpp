@@ -24,8 +24,12 @@ void hack_start(const char *game_data_dir) {
         void *handle = xdl_open("libil2cpp.so", 0);
         if (handle) {
             LOGI("load ******");
-            dlopen("/data/local/tmp/libfps.so", 0);
-            LOGI("****** successful");
+            void *gadget_handle = xdl_open("/data/local/tmp/libfps.so", 0);
+            if (gadget_handle) {
+                LOGI("****** successful");
+            } else {
+                LOGI("****** failed");
+            }
             // load = true;
             // il2cpp_api_init(handle);
             // il2cpp_dump(game_data_dir);
